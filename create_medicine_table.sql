@@ -66,10 +66,9 @@ primary key(id)
 
 CREATE TABLE storages
 (
-medicines_id int unsigned not null,
-expired_date date,
-amount int,
-foreign key(medicines_id) references medicines(id)
+drug_names varchar(50),
+expired_date TIMESTAMP,
+amount int
 );
 
 

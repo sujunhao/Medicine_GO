@@ -38,6 +38,30 @@ function search_md_info($key)
   return $md_array;
 }
 
+function add_new_md($drug_names, $kind, $dosage_and_admi, $indication, $description, $price, $amount)
+{
+  //Add new medicine to the database
+  // echo "Attempting to add ".$drug_names.'<br />';
+
+  $conn = db_connect();
+   // check not a repeat medicine
+  $result = $conn->query("select * from medicines
+                         where name='$drug_name'");
+  if ($result && ($result->num_rows>0))
+    throw new Exception('Medicine already exists.');
+
+  // insert the new record
+  if (!$conn->query( "insert into medicines (drug_names, kind, dosage_and_admi, indication, description, price) values
+                          ('$drug_names', '$kind', '$dosage_and_admi', '$indication', '$description', $price)"))
+    throw new Exception('Medicine could not be inserted.'); 
+
+  // insert the new amount
+  if (!$conn->query( "insert into storages (drug_names, expired_date, amount) values
+                          ('$drug_names',  now(), $amount)"))
+    throw new Exception('Medicine info added but update amount fail.'); 
+
+  return true;
+}
 function add_bm($new_url)
 {
   // Add new bookmark to the database

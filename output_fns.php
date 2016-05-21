@@ -130,7 +130,7 @@ function display_registration_form()
 
 function display_md_info($md_array)
 {
-  // display the table of URLs
+  // display the table of medicines
 
   // set global variable, so we can test later if this is on the page
   global $md_table;
@@ -197,7 +197,7 @@ function display_user_menu()
         echo "<a href='#' onClick='add_prescription.php'>Add Pescription</a>&nbsp;|&nbsp;"; 
     break;
     case 'the_storage':
-        echo "<a href='manage_md.php'>Manage Medicine</a>&nbsp;|&nbsp;"; 
+        echo "<a href='manage_md_form.php'>Manage Medicine</a>&nbsp;|&nbsp;"; 
     break;
     default:
       throw new Exception('Could not check type');
@@ -213,19 +213,66 @@ function display_user_menu()
 
 
 
-function display_manage_md_form()
+function display_new_md_form()
 {
-  // display the form for inventory_manager to manage medicine
+  // display the form for inventory_manager to add new medicine
 ?>
-<form name='bm_table' action='add_bms.php' method='post'>
-<table width=250 cellpadding=2 cellspacing=0 bgcolor='#cccccc'>
-<tr><td>New BM:</td><td><input type='text' name='new_url'  value="http://"
-                        size=30 maxlength=255></td></tr>
-<tr><td colspan=2 align='center'><input type='submit' value='Add bookmark'></td></tr>
+<form name='nmd_table' action='new_medicine.php' method='post'>
+<p>Add new medicine</p>
+<table width=600 cellpadding=2 cellspacing=0 bgcolor='#cccccc'>
+  <tr>
+  <td><input name='new_name' placeholder="new medicin name"></td>
+  <td><input name='new_kin' placeholder="kind"></td>
+  <td><input name='new_dos' placeholder="dosage"></td>
+  <td><input name='new_ind' placeholder="indication"></td>
+  <td><input name='new_des' placeholder="description"></td>
+  <td><input name='new_pri' placeholder="price"></td>
+  <td><input name='new_amo' placeholder="amount"></td>
+  <td colspan=2 align='center'>
+     <input type='submit' value='Add new Medicine'></td>
+  </tr>
 </table>
 </form>
+
 <?php
 }
+
+function display_add_md($md_array)
+{
+  // display the table of medicines
+?>
+  <br />
+  <form name='amd_table' action='add_medicine.php' method='post'>
+  <table width=600 cellpadding=2 cellspacing=0>
+  <?php
+  $color = "#cccccc";
+  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
+  echo "<td><strong>Amount</strong></td>";
+  echo "<td><strong>Add amount</strong></td>";
+  echo "</tr>";
+  if (is_array($md_array) && count($md_array)>0)
+  {
+    foreach ($md_array as $md)
+    {
+      if ($color == "#cccccc")
+        $color = "#ffffff";
+      else
+        $color = "#cccccc";
+      // remember to call htmlspecialchars() when we are displaying user data
+      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<td>".$md[2]."</td>";
+      echo "<td>".$md[3]."</td>";
+      echo "</tr>"; 
+    }
+  }
+  else
+    echo "<tr><td>No record</td></tr>";
+?>
+  </table> 
+  </form>
+<?php
+}
+
 
 function display_password_form()
 {
@@ -267,32 +314,3 @@ function display_forgot_form()
 <?php
 };
 
-function display_recommended_urls($url_array)
-{
-  // similar output to display_user_urls
-  // instead of displaying the users bookmarks, display recomendation
-?>
-  <br />
-  <table width=300 cellpadding=2 cellspacing=0>
-<?php
-  $color = "#cccccc";
-  echo "<tr bgcolor=$color><td><strong>Recommendations</strong></td></tr>";
-  if (is_array($url_array) && count($url_array)>0)
-  {
-    foreach ($url_array as $url)
-    {
-      if ($color == "#cccccc")
-        $color = "#ffffff";
-      else
-        $color = "#cccccc";
-      echo "<tr bgcolor='$color'><td><a href=\"$url\">".htmlspecialchars($url)."</a></td></tr>";
-    }
-  }
-  else
-    echo "<tr><td>No recommendations for you today.</td></tr>";
-?>
-  </table>
-<?php
-};
-
-?>
