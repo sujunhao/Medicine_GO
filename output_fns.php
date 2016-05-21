@@ -15,9 +15,9 @@ function do_html_header($title)
     </style>
   </head>
   <body>
-  <img src="bookmark.gif" alt="PHPbookmark logo" border=0
+  <img src="medicine.gif" alt="Medicine GO logo" border=0
        align=left valign=bottom height = 55 width = 57 />
-  <h1>&nbsp;PHPbookmark</h1>
+  <h1>&nbsp;Medicine GO</h1>
   <hr />
 <?php
   if($title)
@@ -49,14 +49,15 @@ function do_html_URL($url, $name)
 <?php
 }
 
+
 function display_site_info()
 {
   // display some marketing info
 ?>
   <ul>
-  <li>Store your bookmarks online with us!</li>
-  <li>See what other users use!</li>
-  <li>Share your favorite links with others!</li>
+  <li>search and check medicine info!</li>
+  <li>manage medicien amount!</li>
+  <li>just have fun!</li>
   </ul>
 <?php
 }
@@ -76,6 +77,13 @@ function display_login_form()
      <td>Password:</td>
      <td><input type='password' name='passwd'></td></tr>
    <tr>
+     <td>Type:</td>
+     <td><select name="the_type">
+      <option value="the_patient">patient</option>
+      <option value="the_doctor" selected="selected">doctor</option>
+      <option value="the_storage" >inventory manager</option>
+      </select></td></tr>
+   <tr>
      <td colspan=2 align='center'>
      <input type='submit' value='Log in'></td></tr>
    <tr>
@@ -91,8 +99,12 @@ function display_registration_form()
  <form method='post' action='register_new.php'>
  <table bgcolor='#cccccc'>
    <tr>
-     <td>Email address:</td>
-     <td><input type='text' name='email' size=30 maxlength=100></td></tr>
+     <td>Type:</td>
+     <td><select name="the_type">
+      <option value="the_patient">patient</option>
+      <option value="the_doctor" selected="selected">doctor</option>
+      <option value="the_storage" >inventory manager</option>
+      </select></td></tr>
    <tr>
      <td>Preferred username <br />(max 16 chars):</td>
      <td valign='top'><input type='text' name='username'
@@ -105,6 +117,9 @@ function display_registration_form()
      <td>Confirm password:</td>
      <td><input type='password' name='passwd2' size=16 maxlength=16></td></tr>
    <tr>
+     <td>Email address: <br /></td>
+     <td><input type='text' name='email' size=16 maxlength=100></td></tr>
+   <tr>
      <td colspan=2 align='center'>
      <input type='submit' value='Register'></td></tr>
  </table></form>
@@ -112,43 +127,57 @@ function display_registration_form()
 
 }
 
-function display_user_urls($url_array)
+
+function display_md_info($md_array)
 {
   // display the table of URLs
 
   // set global variable, so we can test later if this is on the page
-  global $bm_table;
-  $bm_table = true;
+  global $md_table;
+  $md_table = true;
 ?>
   <br />
-  <form name='bm_table' action='delete_bms.php' method='post'>
-  <table width=300 cellpadding=2 cellspacing=0>
+  <form name='md_table' action='search.php' method='post'>
+  <table width=600 cellpadding=2 cellspacing=0>
+    <tr>
+     <td><input type='text' name='search_text'></td>
+     <td align='left'>
+     <input type='submit' value='Search'></td>
+   </tr>
   <?php
   $color = "#cccccc";
-  echo "<tr bgcolor='$color'><td><strong>Bookmark</strong></td>";
-  echo "<td><strong>Delete?</strong></td></tr>";
-  if (is_array($url_array) && count($url_array)>0)
+  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
+  echo "<td><strong>Kind</strong></td>";
+  echo "<td><strong>Dosage</strong></td>";
+  echo "<td><strong>Indication</strong></td>";
+  echo "<td><strong>Description</strong></td>";
+  echo "<td><strong>Price</strong></td></tr>";
+  if (is_array($md_array) && count($md_array)>0)
   {
-    foreach ($url_array as $url)
+    foreach ($md_array as $md)
     {
       if ($color == "#cccccc")
         $color = "#ffffff";
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr bgcolor='$color'><td><a href=\"$url\">".htmlspecialchars($url)."</a></td>";
-      echo "<td><input type='checkbox' name=\"del_me[]\"
-             value=\"$url\"></td>";
+      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<td>".$md[2]."</td>";
+      echo "<td>".$md[3]."</td>";
+      echo "<td>".$md[4]."</td>";
+      echo "<td>".$md[5]."</td>";
+      echo "<td>".$md[6]."</td>";
       echo "</tr>"; 
     }
   }
   else
-    echo "<tr><td>No bookmarks on record</td></tr>";
+    echo "<tr><td>No record</td></tr>";
 ?>
   </table> 
   </form>
 <?php
 }
+
 
 function display_user_menu()
 {
@@ -156,27 +185,37 @@ function display_user_menu()
 ?>
 <hr />
 <a href="member.php">Home</a> &nbsp;|&nbsp;
-<a href="add_bm_form.php">Add BM</a> &nbsp;|&nbsp; 
 <?php
   // only offer the delete option if bookmark table is on this page
-  global $bm_table;
-  if($bm_table==true)
-    echo "<a href='#' onClick='bm_table.submit();'>Delete BM</a>&nbsp;|&nbsp;"; 
-  else
-    echo "<font color='#cccccc'>Delete BM</font>&nbsp;|&nbsp;"; 
+  $thetype=$_SESSION['valid_type'];
+  switch($thetype)
+  {
+    case 'the_patient':
+        echo "<a href='#' onClick='show_prescription.php'>Show Prescription</a>&nbsp;|&nbsp;"; 
+    break;
+    case 'the_doctor':
+        echo "<a href='#' onClick='add_prescription.php'>Add Pescription</a>&nbsp;|&nbsp;"; 
+    break;
+    case 'the_storage':
+        echo "<a href='manage_md.php'>Manage Medicine</a>&nbsp;|&nbsp;"; 
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
 ?>
 <a href="change_passwd_form.php">Change password</a>
 <br />
-<a href="recommend.php">Recommend URLs to me</a> &nbsp;|&nbsp;
 <a href="logout.php">Logout</a> 
 <hr />
 
 <?php
 }
 
-function display_add_bm_form()
+
+
+function display_manage_md_form()
 {
-  // display the form for people to ener a new bookmark in
+  // display the form for inventory_manager to manage medicine
 ?>
 <form name='bm_table' action='add_bms.php' method='post'>
 <table width=250 cellpadding=2 cellspacing=0 bgcolor='#cccccc'>

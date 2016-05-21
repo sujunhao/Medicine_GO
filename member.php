@@ -1,21 +1,23 @@
 <?php
 
 // include function files for this application
-require_once('bookmark_fns.php'); 
+require_once('medicine_fns.php'); 
 session_start();
 
 //create short variable names
+$thetype = $_POST['the_type'];
 $username = $_POST['username'];
 $passwd = $_POST['passwd'];
 
-if ($username && $passwd)
+if ($username && $passwd && $thetype)
 // they have just tried logging in
 {
   try
   {
-    login($username, $passwd);
+    login($thetype, $username, $passwd);
     // if they are in the database register the user id
     $_SESSION['valid_user'] = $username;
+    $_SESSION['valid_type'] = $thetype;
   }
   catch(Exception $e)
   {
@@ -31,9 +33,11 @@ if ($username && $passwd)
 
 do_html_header('Home');
 check_valid_user();
-// get the bookmarks this user has saved
-if ($url_array = get_user_urls($_SESSION['valid_user']))
-  display_user_urls($url_array);
+
+
+// get the medicine info
+if ($md_array = get_md_info())
+  display_md_info($md_array);
 
 // give menu of options
 display_user_menu();

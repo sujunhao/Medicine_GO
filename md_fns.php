@@ -1,25 +1,43 @@
 <?php
 require_once('db_fns.php');
 
-function get_user_urls($username)
+function get_md_info()
 {
   //extract from the database all the URLs this user has stored
   $conn = db_connect();
-  $result = $conn->query( "select bm_URL
-                          from bookmark
-                          where username = '$username'");
+  $result = $conn->query( "select *
+                          from medicines" );
   if (!$result)
     return false; 
 
   //create an array of the URLs 
-  $url_array = array();
+  $md_array = array();
   for ($count = 1; $row = $result->fetch_row(); ++$count) 
   {
-    $url_array[$count] = $row[0];
+    $md_array[$count] = $row;
   }  
-  return $url_array;
+  return $md_array;
 }
   
+function search_md_info($key)
+{
+  //extract from the database all the URLs this user has stored
+  $conn = db_connect();
+  $result = $conn->query( "select *
+                          from medicines
+                          where drug_names like \"%$key%\"");
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $md_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $md_array[$count] = $row;
+  }  
+  return $md_array;
+}
+
 function add_bm($new_url)
 {
   // Add new bookmark to the database

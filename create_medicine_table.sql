@@ -39,6 +39,7 @@ CREATE TABLE inventory_manager
 (
 id int unsigned not null auto_increment,
 name varchar(50) not null,
+email varchar(50),
 passwd varchar(50) not null,
 primary key(id)
 );

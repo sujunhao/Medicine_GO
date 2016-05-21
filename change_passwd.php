@@ -1,5 +1,5 @@
 <?php
-  require_once('bookmark_fns.php');
+  require_once('medicine_fns.php');
   session_start();
   do_html_header('Changing password');
  
@@ -18,7 +18,7 @@
     if (strlen($new_passwd)>16 || strlen($new_passwd)<6)
        throw new Exception('New password must be between 6 and 16 characters.  Try again.');
     // attempt update
-    change_password($_SESSION['valid_user'], $old_passwd, $new_passwd);
+    change_password($_SESSION['valid_type'], $_SESSION['valid_user'], $old_passwd, $new_passwd);
     echo 'Password changed.';
   }
   catch (Exception $e)

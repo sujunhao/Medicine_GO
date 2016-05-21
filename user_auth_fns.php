@@ -2,7 +2,7 @@
 
 require_once('db_fns.php');
 
-function register($username, $email, $password)
+function register($thetype, $username, $email, $password)
 // register new person with db
 // return true or error message
 {
@@ -10,22 +10,56 @@ function register($username, $email, $password)
   $conn = db_connect();
   
   // check if username is unique 
-  $result = $conn->query("select * from user where username='$username'"); 
-  if (!$result)
-    throw new Exception('Could not execute query');
-  if ($result->num_rows>0) 
-    throw new Exception('That username is taken - go back and choose another one.');
+  switch($thetype)
+  {
+    case 'the_patient':
+        $result = $conn->query("select * from patient where name='$username'"); 
+        if (!$result)
+          throw new Exception('Could not execute query');
+        if ($result->num_rows>0) 
+          throw new Exception('That username is taken - go back and choose another one.');
 
-  // if ok, put in db
-  $result = $conn->query("insert into user values 
-                         ('$username', sha1('$password'), '$email')");
-  if (!$result)
-    throw new Exception('Could not register you in database - please try again later.');
+        // if ok, put in db
+        $result = $conn->query("insert into patient (name, passwd, email) values 
+                               ('$username', sha1('$password'), '$email')");
+        if (!$result)
+          throw new Exception('Could not register you in database - please try again later.');
+    break;
+    case 'the_doctor':
+        $result = $conn->query("select * from doctor where name='$username'"); 
+        if (!$result)
+          throw new Exception('Could not execute query');
+        if ($result->num_rows>0) 
+          throw new Exception('That username is taken - go back and choose another one.');
+
+        // if ok, put in db
+        $result = $conn->query("insert into doctor (name, passwd, email) values 
+                               ('$username', sha1('$password'), '$email')");
+        if (!$result)
+          throw new Exception('Could not register you in database - please try again later.');
+    break;
+    case 'the_storage':
+        $result = $conn->query("select * from inventory_manager where name='$username'"); 
+        if (!$result)
+          throw new Exception('Could not execute query');
+        if ($result->num_rows>0) 
+          throw new Exception('That username is taken - go back and choose another one.');
+
+        // if ok, put in db
+        $result = $conn->query("insert into inventory_manager (name, passwd, email) values 
+                               ('$username', sha1('$password'), '$email')");
+        if (!$result)
+          throw new Exception('Could not register you in database - please try again later.');
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
+  
 
   return true;
 }
  
-function login($username, $password)
+function login($thetype, $username, $password)
 // check username and password with db
 // if yes, return true
 // else throw exception
@@ -33,9 +67,23 @@ function login($username, $password)
   // connect to db
   $conn = db_connect();
 
+  switch($thetype)
+  {
+    case 'the_patient':
+        $thetype='patient';
+    break;
+    case 'the_doctor':
+        $thetype='doctor';
+    break;
+    case 'the_storage':
+        $thetype='inventory_manager';
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
   // check if username is unique
-  $result = $conn->query("select * from user 
-                         where username='$username'
+  $result = $conn->query("select * from $thetype 
+                         where name='$username'
                          and passwd = sha1('$password')");
   if (!$result)
      throw new Exception('Could not log you in.');
@@ -49,9 +97,26 @@ function login($username, $password)
 function check_valid_user()
 // see if somebody is logged in and notify them if not
 {
+  $thetype=$_SESSION['valid_type'];
+  switch($thetype)
+  {
+    case 'the_patient':
+        $thetype='patient';
+    break;
+    case 'the_doctor':
+        $thetype='doctor';
+    break;
+    case 'the_storage':
+        $thetype='inventory_manager';
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
   if (isset($_SESSION['valid_user']))
   {
       echo 'Logged in as '.$_SESSION['valid_user'].'.';
+      echo '<br />';
+      echo 'hello '.$thetype.'.';
       echo '<br />';
   }
   else
@@ -65,18 +130,32 @@ function check_valid_user()
   }  
 }
 
-function change_password($username, $old_password, $new_password)
+function change_password($thetype, $username, $old_password, $new_password)
 // change password for username/old_password to new_password
 // return true or false
 {
   // if the old password is right 
   // change their password to new_password and return true
   // else throw an exception
-  login($username, $old_password);
+  login($thetype, $username, $old_password);
+  switch($thetype)
+  {
+    case 'the_patient':
+        $thetype='patient';
+    break;
+    case 'the_doctor':
+        $thetype='doctor';
+    break;
+    case 'the_storage':
+        $thetype='inventory_manager';
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
   $conn = db_connect();
-  $result = $conn->query( "update user
+  $result = $conn->query( "update $thetype
                             set passwd = sha1('$new_password')
-                            where username = '$username'");
+                            where name = '$username'");
   if (!$result)
     throw new Exception('Password could not be changed.');
   else
@@ -132,7 +211,7 @@ function reset_password($username)
   $conn = db_connect();
   $result = $conn->query( "update user
                           set passwd = sha1('$new_password')
-                          where username = '$username'");
+                          where name = '$username'");
   if (!$result)
     throw new Exception('Could not change password.');  // not changed
   else
@@ -157,12 +236,12 @@ function notify_password($username, $password)
     {
       $row = $result->fetch_object();
       $email = $row->email;
-      $from = "From: support@phpbookmark \r\n";
-      $mesg = "Your PHPBookmark password has been changed to $password \r\n"
+      $from = "From: support@medicine \r\n";
+      $mesg = "Your medicineGO password has been changed to $password \r\n"
               ."Please change it next time you log in. \r\n";
       
       
-      if (mail($email, 'PHPBookmark login information', $mesg, $from))
+      if (mail($email, 'medicine login information', $mesg, $from))
         return true;      
       else
         throw new Exception('Could not send email.');

@@ -1,8 +1,9 @@
 <?php
   // include function files for this application
-  require_once('bookmark_fns.php');
+  require_once('medicine_fns.php');
 
   //create short variable names
+  $thetype=$_POST['the_type'];
   $email=$_POST['email'];
   $username=$_POST['username'];
   $passwd=$_POST['passwd'];
@@ -44,14 +45,14 @@
    
     // attempt to register
     // this function can also throw an exception
-    register($username, $email, $passwd);
+    register($thetype, $username, $email, $passwd);
     // register session variable 
     $_SESSION['valid_user'] = $username;
+    $_SESSION['valid_type'] = $thetype;
     
     // provide link to members page
     do_html_header('Registration successful');
-    echo 'Your registration was successful.  Go to the members page '
-          .'to start setting up your bookmarks!';
+    echo 'Your registration was successful.  Go to the members page ';
     do_html_url('member.php', 'Go to members page');
    
    // end page
