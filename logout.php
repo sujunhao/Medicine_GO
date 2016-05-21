@@ -1,7 +1,7 @@
 <?php
 
 // include function files for this application
-require_once('medicine_fns.php'); 
+require_once('bookmark_fns.php'); 
 session_start();
 $old_user = $_SESSION['valid_user'];  
 // store  to test if they *were* logged in

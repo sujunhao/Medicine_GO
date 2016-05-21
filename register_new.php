@@ -1,6 +1,6 @@
 <?php
   // include function files for this application
-  require_once('medicine_fns.php');
+  require_once('bookmark_fns.php');
 
   //create short variable names
   $email=$_POST['email'];

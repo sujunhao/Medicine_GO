@@ -15,9 +15,9 @@ function do_html_header($title)
     </style>
   </head>
   <body>
-  <img src="medicine.gif" alt="Medicine logo" border=0
+  <img src="bookmark.gif" alt="PHPbookmark logo" border=0
        align=left valign=bottom height = 55 width = 57 />
-  <h1>&nbsp;MEDICINE GO</h1>
+  <h1>&nbsp;PHPbookmark</h1>
   <hr />
 <?php
   if($title)
@@ -51,12 +51,12 @@ function do_html_URL($url, $name)
 
 function display_site_info()
 {
-  // display some  info
+  // display some marketing info
 ?>
   <ul>
-  <li>search and check medicines info</li>
-  <li>add and manage medicines amount</li>
-  <li>have fun!</li>
+  <li>Store your bookmarks online with us!</li>
+  <li>See what other users use!</li>
+  <li>Share your favorite links with others!</li>
   </ul>
 <?php
 }
@@ -68,7 +68,7 @@ function display_login_form()
   <form method='post' action='member.php'>
   <table bgcolor='#cccccc'>
    <tr>
-     <td colspan=2>user log in here:</td>
+     <td colspan=2>Members log in here:</td>
    <tr>
      <td>Username:</td>
      <td><input type='text' name='username'></td></tr>
