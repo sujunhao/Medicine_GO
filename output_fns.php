@@ -178,7 +178,88 @@ function display_md_info($md_array)
 <?php
 }
 
+function display_profile_patient($info)
+{
+  // display the table of patient
+?>
+  <br />
+  <form name='info_table' action='' method='post'>
+  <table width=600 cellpadding=2 cellspacing=0>
+<?php
+  $color = "#cccccc";
+  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
+  echo "<td><strong>email</strong></td>";
+  echo "<td><strong>address</strong></td>";
+  echo "<td><strong>sexual</strong></td>";
+  echo "<td><strong>age</strong></td>";
+  echo "<td><strong>case_history</strong></td></tr>";
+  if (is_array($info) && count($info)>0)
+  {
+    foreach ($info as $md)
+    {
+      if ($color == "#cccccc")
+        $color = "#ffffff";
+      else
+        $color = "#cccccc";
+      // remember to call htmlspecialchars() when we are displaying user data
+      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<td>".$md[3]."</td>";
+      echo "<td>".$md[4]."</td>";
+      echo "<td>".$md[5]."</td>";
+      echo "<td>".$md[6]."</td>";
+      echo "<td>".$md[7]."</td>";
+      echo "</tr>"; 
+    }
+  }
+  else
+    echo "<tr><td>No profile record</td></tr>";
+?>
+  </table> 
+  </form>
+<?php
 
+}
+function display_profile_doctor($info)
+{
+  // display the table of patient
+?>
+  <br />
+  <form name='info_table' action='' method='post'>
+  <table width=600 cellpadding=2 cellspacing=0>
+<?php
+  $color = "#cccccc";
+  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
+  echo "<td><strong>email</strong></td>";
+  echo "<td><strong>address</strong></td>";
+  echo "<td><strong>sexual</strong></td>";
+  echo "<td><strong>age</strong></td>";
+  echo "<td><strong>specialty</strong></td></tr>";
+  if (is_array($info) && count($info)>0)
+  {
+    foreach ($info as $md)
+    {
+      if ($color == "#cccccc")
+        $color = "#ffffff";
+      else
+        $color = "#cccccc";
+      // remember to call htmlspecialchars() when we are displaying user data
+      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<td>".$md[3]."</td>";
+      echo "<td>".$md[4]."</td>";
+      echo "<td>".$md[5]."</td>";
+      echo "<td>".$md[6]."</td>";
+      echo "<td>".$md[7]."</td>";
+      echo "</tr>"; 
+    }
+  }
+  else
+    echo "<tr><td>No profile record</td></tr>";
+?>
+  </table> 
+  </form>
+<?php
+
+}
 function display_user_menu()
 {
   // display the menu options on this page
@@ -192,9 +273,11 @@ function display_user_menu()
   {
     case 'the_patient':
         echo "<a href='#' onClick='show_prescription.php'>Show Prescription</a>&nbsp;|&nbsp;"; 
+        echo "<a href='show_profile.php'>Show Profile</a>&nbsp;|&nbsp;"; 
     break;
     case 'the_doctor':
         echo "<a href='#' onClick='add_prescription.php'>Add Pescription</a>&nbsp;|&nbsp;"; 
+        echo "<a href='show_profile.php'>Show Profile</a>&nbsp;|&nbsp;"; 
     break;
     case 'the_storage':
         echo "<a href='manage_md_form.php'>Manage Medicine</a>&nbsp;|&nbsp;"; 

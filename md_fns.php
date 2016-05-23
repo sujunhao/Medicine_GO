@@ -14,7 +14,7 @@ function get_md_info()
   if (!$result)
     return false; 
 
-  //create an array of the URLs 
+  //create an array of the mds 
   $md_array = array();
   for ($count = 1; $row = $result->fetch_row(); ++$count) 
   {
@@ -33,7 +33,7 @@ function search_md_info($key)
   if (!$result)
     return false; 
 
-  //create an array of the URLs 
+  //create an array of the mds 
   $md_array = array();
   for ($count = 1; $row = $result->fetch_row(); ++$count) 
   {
@@ -79,4 +79,36 @@ function add_new_md($drug_names, $kind, $dosage_and_admi, $indication, $descript
     throw new Exception('Medicine info added but update amount fail.'); 
 
   return true;
+}
+
+
+function get_member_info($thetype, $name)
+{
+  //extract from the database all the URLs this user has stored
+  $conn = db_connect();
+  switch($thetype)
+  {
+    case 'the_patient':
+        $thetype='patient';
+    break;
+    case 'the_doctor':
+        $thetype='doctor';
+    break;
+    default:
+      throw new Exception('Could not check type');
+  }
+
+  $result = $conn->query( "select *
+                          from $thetype
+                          where name = '$name'");
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $member_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $member_array[$count] = $row;
+  }  
+  return $member_array;
 }
