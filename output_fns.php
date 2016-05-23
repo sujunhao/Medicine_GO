@@ -146,7 +146,8 @@ function display_md_info($md_array)
    </tr>
   <?php
   $color = "#cccccc";
-  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
+  echo "<tr bgcolor='$color'><td><strong>ID</strong></td>";
+  echo "<td><strong>Name</strong></td>";
   echo "<td><strong>Kind</strong></td>";
   echo "<td><strong>Dosage</strong></td>";
   echo "<td><strong>Indication</strong></td>";
@@ -161,7 +162,8 @@ function display_md_info($md_array)
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<tr color='$color'><td>".$md[0]."</td>";
+      echo "<td>".$md[1]."</td>";
       echo "<td>".$md[2]."</td>";
       echo "<td>".$md[3]."</td>";
       echo "<td>".$md[4]."</td>";
