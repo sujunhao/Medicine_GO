@@ -246,9 +246,9 @@ function display_add_md($md_array)
   <table width=600 cellpadding=2 cellspacing=0>
   <?php
   $color = "#cccccc";
-  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
-  echo "<td><strong>Amount</strong></td>";
-  echo "<td><strong>Add amount</strong></td>";
+  echo "<tr bgcolor='$color' align='center'><td><strong>Name</strong></td>";
+  echo "<td align='center'><strong>Amount</strong></td>";
+  echo "<td align='center'><strong>Add amount</strong></td>";
   echo "</tr>";
   if (is_array($md_array) && count($md_array)>0)
   {
@@ -258,12 +258,16 @@ function display_add_md($md_array)
         $color = "#ffffff";
       else
         $color = "#cccccc";
-      // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[1]."</td>";
-      echo "<td>".$md[2]."</td>";
-      echo "<td>".$md[3]."</td>";
+      echo "<tr color='$color' align='center'><td>".$md[1]."</td>";
+      if ($md[7] != NULL)
+          echo "<td align='center'>".$md[7]."</td>";
+      else
+          echo "<td align='center'>0</td>";
+      echo "<td><input type='text' name=".$md[0]."amount"."></td>";
       echo "</tr>"; 
     }
+    echo "<tr> <td colspan=2 align='center'>
+     <input type='submit' value='Add new amount'></td> </tr>";
   }
   else
     echo "<tr><td>No record</td></tr>";

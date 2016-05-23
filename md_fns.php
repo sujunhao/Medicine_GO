@@ -5,8 +5,12 @@ function get_md_info()
 {
   //extract from the database all the URLs this user has stored
   $conn = db_connect();
-  $result = $conn->query( "select *
-                          from medicines" );
+  $result = $conn->query( "select id, medicines.drug_names, kind, dosage_and_admi, indication, description, price,
+                           SUM(amount)
+                           from medicines left join storages
+                           using(drug_names)
+                           group by id;
+                           " );
   if (!$result)
     return false; 
 
@@ -37,6 +41,8 @@ function search_md_info($key)
   }  
   return $md_array;
 }
+
+
 
 function add_new_md($drug_names, $kind, $dosage_and_admi, $indication, $description, $price, $amount)
 {
