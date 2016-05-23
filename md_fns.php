@@ -169,3 +169,76 @@ function get_my_patient($doctor_id)
   }  
   return $member_array;
 }
+
+//$id_array = add_prescriptiopn($pname, $doctor_id, $patient_id, $description);
+function add_prescriptiopn($pname, $doctor_id, $patient_id, $description)
+{
+  $conn = db_connect();
+
+  // check not a repeat medicine
+  $result = $conn->query("select * from prescription
+                         where pname='$pname'");
+  if ($result && ($result->num_rows>0))
+    throw new Exception('prescription already exists.');
+
+  // insert the new record
+  if (!$conn->query( "insert into prescription (pname, doctor_id, patient_id, description) values
+                          ('$pname', $doctor_id, $patient_id, '$description')"))
+    throw new Exception('prescription could not be inserted.'); 
+
+  $result = $conn->query( "select id
+                          from prescription
+                          where pname='$pname'");
+
+  //create an array of the mds 
+  $md_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $md_array[$count] = $row;
+  }  
+  return $md_array;
+}
+
+function add_p_m($p_id, $m_id, $amount)
+{
+
+  $conn = db_connect();
+   // check not a repeat medicine
+  
+  // insert the new record
+  if (!$conn->query( "insert into p_m (p_id, m_id, amount) values
+                          ($p_id, $m_id, $amount)"))
+    throw new Exception('p_m could not be inserted.'); 
+
+  return true;
+}
+
+function get_my_prescription($thetype, $id)
+{
+  $conn = db_connect();
+  switch($thetype)
+  {
+    case 'the_patient':
+        $result = $conn->query( "select prescription.pname, doctor.name, patient.name, description
+                          from prescription, doctor, patient
+                          where patient_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id");
+    break;
+    case 'the_doctor':
+      $result = $conn->query( "select prescription.pname, doctor.name, patient.name, description
+                          from prescription, doctor, patient
+                          where doctor_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id");
+    break;
+    default:
+      throw new Exception('type error');
+  }
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $member_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $member_array[$count] = $row;
+  }  
+  return $member_array;
+}

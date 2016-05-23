@@ -11,12 +11,34 @@ $username = $_SESSION['valid_user'] ;
 $thetype = $_SESSION['valid_type'];
 $theid = $_SESSION['valid_user_id'];
 
-
-display_add_prescription_form();
-
-
 try
 {
+	switch($thetype)
+	{
+		case 'the_patient':
+			if ($info = get_my_prescription($thetype, $theid))
+		    {
+		    	display_prescription_form($info);
+		    }
+		    else
+		    {
+		      throw new Exception("can't get pre info");
+		    }
+		break;
+		case 'the_doctor':
+			display_add_prescription_form();
+		    if ($info = get_my_prescription($thetype, $theid))
+		    {
+		    	display_prescription_form($info);
+		    }
+		    else
+		    {
+		      throw new Exception("can't get pre info");
+		    }
+		break;
+		default:
+		  throw new Exception('type error');
+	}
 	
 }	
 catch(Exception $e)

@@ -7,6 +7,17 @@ function do_html_header($title)
   <html>
   <head>
     <title><?php echo $title;?></title>
+    <script src="jquery-1.12.4.min.js"></script>
+    <script>
+    var num=1;
+    $(document).ready(function(){
+
+      $(".btn").click(function(){
+        $(".new_md:last").after("<tr class='new_md'><td><input name='md_id_"+num+"' placeholder='medicint id'></td> <td><input name='md_am_"+num+"' placeholder='amount'></td></tr>");num=num+1;
+      });
+      
+    });
+    </script>
     <style>
       body { font-family: Arial, Helvetica, sans-serif; font-size: 13px }
       li, td { font-family: Arial, Helvetica, sans-serif; font-size: 13px }
@@ -277,9 +288,8 @@ function display_prescription_form($info)
   echo "<tr bgcolor='$color'><td><strong>Prescription name</strong></td>";
   echo "<td><strong>doctor</strong></td>";
   echo "<td><strong>patient</strong></td>";
-  echo "<td><strong>medicines</strong></td>";
   echo "<td><strong>description</strong></td>";
-  echo "<td><strong>amount</strong></td></tr>";
+  echo "<td><strong>medicines info</strong></td></tr>";
   if (is_array($info) && count($info)>0)
   {
     foreach ($info as $md)
@@ -289,13 +299,14 @@ function display_prescription_form($info)
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[1]."</td>";
+      echo "<tr color='$color'><td>".$md[0]."</td>";
+      echo "<td>".$md[1]."</td>";
       echo "<td>".$md[2]."</td>";
       echo "<td>".$md[3]."</td>";
-      echo "<td>".$md[4]."</td>";
-      echo "<td>".$md[5]."</td>";
-      echo "<td>".$md[6]."</td>";
+      echo "<td><button type='button' >Check</button></td>";
       echo "</tr>"; 
+      // echo "<tr><td><strong>medicines</strong></td>";
+      // echo "<td><strong>amount</strong></td></tr>";
     }
   }
   else
@@ -313,12 +324,16 @@ function display_add_prescription_form()
 <form name='np_table' action='add_prescription.php' method='post'>
 <p>Add new prescription</p>
 <table width=600 cellpadding=2 cellspacing=0 bgcolor='#cccccc'>
-  <tr>
+  <tr class="new_md">
   <td><input name='new_name' placeholder="new prescription name"></td>
   <td><input name='new_pat' placeholder="patient id"></td>
-  <td><input name='new_med' placeholder="medicint id"></td>
   <td><input name='new_des' placeholder="description"></td>
-  <td><input name='new_amo' placeholder="amount"></td>
+  </tr>
+  
+  <tr><td><button type="button" class="btn">Add medicine</button></td></tr>
+
+
+  <tr>
   <td colspan=2 align='center'>
      <input type='submit' value='Add new Prescription'></td>
   </tr>

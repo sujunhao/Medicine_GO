@@ -23,6 +23,10 @@
     {
       display_profile_patient($info);
     }
+    else
+    {
+      throw new Exception("can't get pre info");
+    }
     display_user_menu();
     do_html_footer();
   }
