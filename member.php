@@ -8,12 +8,17 @@ session_start();
 $thetype = $_POST['the_type'];
 $username = $_POST['username'];
 $passwd = $_POST['passwd'];
-
-if ($username && $passwd && $thetype)
-// they have just tried logging in
+if ($_SESSION['valid_user']==NULL)
 {
   try
   {
+    // check forms filled in
+    if (!filled_out($_POST))
+    {
+      throw new Exception('You have not filled the form out correctly - please go back'
+          .' and try again.');    
+    }
+
     login($thetype, $username, $passwd);
     // if they are in the database register the user id
     $_SESSION['valid_user'] = $username;
@@ -28,7 +33,7 @@ if ($username && $passwd && $thetype)
     do_html_url('login.php', 'Login');
     do_html_footer();
     exit;
-  }      
+  }
 }
 
 do_html_header('Home');

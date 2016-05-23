@@ -183,7 +183,7 @@ function display_user_menu()
 {
   // display the menu options on this page
 ?>
-<hr />
+<hr />|&nbsp;
 <a href="member.php">Home</a> &nbsp;|&nbsp;
 <?php
   // only offer the delete option if bookmark table is on this page
@@ -202,13 +202,8 @@ function display_user_menu()
     default:
       throw new Exception('Could not check type');
   }
-?>
-<a href="change_passwd_form.php">Change password</a>
-<br />
-<a href="logout.php">Logout</a> 
-<hr />
-
-<?php
+  echo "<a href='change_passwd_form.php'>Change password</a>&nbsp;|&nbsp;"; 
+  echo "<a href='logout.php'>Logout</a>&nbsp;|&nbsp;<hr />"; 
 }
 
 

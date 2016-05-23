@@ -33,9 +33,9 @@
     if ($md_array = get_md_info())
       display_add_md($md_array);
 
-    display_user_menu();
 
    
+    display_user_menu();
    // end page
    do_html_footer();
   }

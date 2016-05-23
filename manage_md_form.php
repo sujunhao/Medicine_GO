@@ -5,8 +5,8 @@ session_start();
 
 // start output html
 do_html_header('manage Medicines');
-
 check_valid_user();
+
 display_new_md_form();
 
 // get the medicine info

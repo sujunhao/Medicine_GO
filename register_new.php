@@ -62,6 +62,7 @@
   {
      do_html_header('Problem:');
      echo $e->getMessage(); 
+     do_html_url('login.php', 'Go to login page');
      do_html_footer();
      exit;
   } 
