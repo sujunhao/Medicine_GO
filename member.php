@@ -19,7 +19,17 @@ if ($_SESSION['valid_user']==NULL)
           .' and try again.');    
     }
 
-    login($thetype, $username, $passwd);
+    $id_array = login($thetype, $username, $passwd);
+
+
+    if (is_array($id_array) && count($id_array)>0)
+    {
+      foreach ($id_array as $id)
+      {
+        $_SESSION['valid_user_id'] = $id[0];
+      }
+    }
+    // echo "PPPP".$_SESSION['valid_user_id'];
     // if they are in the database register the user id
     $_SESSION['valid_user'] = $username;
     $_SESSION['valid_type'] = $thetype;

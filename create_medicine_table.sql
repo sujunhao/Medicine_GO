@@ -79,10 +79,12 @@ pid int unsigned not null auto_increment,
 pname varchar(50),
 doctor_id int unsigned not null,
 patient_id int unsigned not null,
+medicions_id int unsigned not null,
 description text,
 amount_to_take int unsigned,
 foreign key(patient_id) references patient(id),
 foreign key(doctor_id) references doctor(id),
+foreign key(medicions_id) references medicions(id),
 primary key(pid)
 );
 

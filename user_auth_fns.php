@@ -82,16 +82,24 @@ function login($thetype, $username, $password)
       throw new Exception('Could not check type');
   }
   // check if username is unique
-  $result = $conn->query("select * from $thetype 
+  $result = $conn->query("select id from $thetype 
                          where name='$username'
                          and passwd = sha1('$password')");
   if (!$result)
      throw new Exception('Could not log you in.');
   
-  if ($result->num_rows>0)
-     return true;
-  else 
-     throw new Exception('Could not log you in.');
+  // if ($result->num_rows>0)
+  //    return $result->fetch_row();
+
+  //create an array of the ids 
+  $id_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $id_array[$count] = $row;
+  }  
+  return $id_array;
+
+  throw new Exception('Could not log you in.');
 }
 
 function check_valid_user()

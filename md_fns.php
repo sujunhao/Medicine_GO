@@ -81,6 +81,27 @@ function add_new_md($drug_names, $kind, $dosage_and_admi, $indication, $descript
   return true;
 }
 
+function add_new_patient($doctor_id, $patient_id)
+{
+  //Add new patient to a doctor
+
+  $conn = db_connect();
+   // check if there is a patient exist
+  $result = $conn->query("select id from patient
+                         where id = $patient_id");
+  if (!$result || !($result->num_rows>0))
+    throw new Exception('Patient no exists.');
+
+  // update the record
+  if (!$conn->query( "update patient 
+                      set primary_doctor_id = $doctor_id
+                      where id = $patient_id"))
+    throw new Exception("Can't update patient primary doctor"); 
+
+  return true;
+}
+
+
 
 function get_member_info($thetype, $name)
 {
@@ -101,6 +122,42 @@ function get_member_info($thetype, $name)
   $result = $conn->query( "select *
                           from $thetype
                           where name = '$name'");
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $member_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $member_array[$count] = $row;
+  }  
+  return $member_array;
+}
+function get_all_patient()
+{
+  $conn = db_connect();
+
+  $result = $conn->query( "select *
+                          from patient");
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $member_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $member_array[$count] = $row;
+  }  
+  return $member_array;
+}
+
+function get_my_patient($doctor_id)
+{
+  $conn = db_connect();
+
+  $result = $conn->query( "select *
+                          from patient
+                          where primary_doctor_id = $doctor_id");
   if (!$result)
     return false; 
 
