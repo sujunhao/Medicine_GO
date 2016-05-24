@@ -8,5 +8,5 @@ you can check requirement and design file in [this](/requirement&desige_material
 
 ![ER](/requirement&desige_material/project.png)
 
-![Screenshot](/requirement&desige_material/screenshot.png)
+![Screenshot](/requirement&desige_material/Screenshot.png)
 
