@@ -17,7 +17,7 @@ try
 	display_my_patient_form($mypatient);
 	if ($info = get_all_patient())
 	{
-		display_profile_patient($info);
+		display_profile_my_patient($info);
 	}
 	else 
 	{

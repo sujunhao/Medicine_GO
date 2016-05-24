@@ -242,3 +242,52 @@ function get_my_prescription($thetype, $id)
   }  
   return $member_array;
 }
+
+function update_profile_doctor($id, $name, $email, $address, $sexual, $age, $specialty, $clinic_name, $clinic_location)
+{
+
+  $conn = db_connect();
+   // check if there is a patient exist
+  $result = $conn->query("select id from doctor
+                         where name = '$name' && id != $id");
+  if ($result && ($result->num_rows>0))
+    throw new Exception('Name exists.');
+
+  // update the record
+  if (!$conn->query( "update doctor
+                      set name='$name', 
+                      email='$email', 
+                      address='$address', 
+                      sexual=$sexual, 
+                      specialty='$specialty',
+                      age=$age, 
+                      c_name='$clinic_name', 
+                      c_location='$clinic_location'
+                      where id = $id"))
+    throw new Exception("Can't update  doctor profile"); 
+
+  return true;
+}
+
+function update_profile_patient($id, $name, $email, $address, $sexual, $age, $case_history)
+{
+   $conn = db_connect();
+   // check if there is a patient exist
+  $result = $conn->query("select id from patient
+                         where name = '$name' && id != $id");
+  if ($result && ($result->num_rows>0))
+    throw new Exception('Name exists.');
+
+  // update the record
+  if (!$conn->query( "update patient
+                      set name='$name', 
+                      email='$email', 
+                      address='$address', 
+                      sexual=$sexual, 
+                      case_history='$case_history',
+                      age=$age
+                      where id = $id"))
+    throw new Exception("Can't update  patient profile"); 
+
+  return true;
+}

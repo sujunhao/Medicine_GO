@@ -191,9 +191,8 @@ function display_md_info($md_array)
 <?php
 }
 
-function display_profile_patient($info)
+function display_profile_my_patient($info)
 {
-  // display the table of patient
 ?>
   <br />
   <form name='info_table' action='' method='post'>
@@ -206,7 +205,7 @@ function display_profile_patient($info)
   echo "<td><strong>address</strong></td>";
   echo "<td><strong>sexual</strong></td>";
   echo "<td><strong>age</strong></td>";
-  echo "<td><strong>case_history</strong></td></tr>";
+  echo "<td><strong>case history</strong></td></tr>";
   if (is_array($info) && count($info)>0)
   {
     foreach ($info as $md)
@@ -216,39 +215,65 @@ function display_profile_patient($info)
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[0]."</td>";
-      echo "<td>".$md[1]."</td>";
+      echo "<tr><td>".$md[1]."</td>";
       echo "<td>".$md[3]."</td>";
       echo "<td>".$md[4]."</td>";
       echo "<td>".$md[5]."</td>";
       echo "<td>".$md[6]."</td>";
       echo "<td>".$md[7]."</td>";
-      echo "</tr>"; 
+      echo "<td>".$md[8]."</td></tr>";
     }
   }
   else
     echo "<tr><td>No profile record</td></tr>";
-?>
+?>_i
   </table> 
   </form>
 <?php
-
 }
+
+function display_profile_patient($info)
+{
+?>
+  <br />
+  <form name='info_table' action='update_profile.php' method='post'>
+  <table width=600 cellpadding=2 cellspacing=0>
+<?php
+  if (is_array($info) && count($info)>0)
+  {
+    foreach ($info as $md)
+    {
+      if ($color == "#cccccc")
+        $color = "#ffffff";
+      else
+        $color = "#cccccc";
+      // remember to call htmlspecialchars() when we are displaying user data
+      echo "<tr bgcolor='$color'><td><strong>Name</strong></td><td><input type='text' name='name' value=".$md[1]."></td></tr>";
+      echo "<tr><td><strong>email</strong></td><td><input type='text' name='email' value=".$md[3]."></td></tr>";
+      echo "<tr><td><strong>address</strong></td><td><input type='text' name='address' value=".$md[4]."></td></tr>";
+      echo "<tr><td><strong>sexual</strong></td><td><input type='text' name='sexual' value=".$md[5]."></td></tr>";
+      echo "<tr><td><strong>age</strong></td><td><input type='text' name='age' value=".$md[6]."></td></tr>";
+      echo "<tr><td><strong>case history</strong></td><td><input type='text' name='case_history' value=".$md[7]."></td></tr>";
+      echo "<tr><td><strong>primary doctor</strong></td><td><input type='text' name='primary_doctor' value=".$md[8]."></td></tr>";
+    }
+    echo "<tr> <td colspan=2 align='center'> <input type='submit' value='Update Profile'></td></tr>";
+  }
+  else
+    echo "<tr><td>No profile record</td></tr>";
+?>_i
+  </table> 
+  </form>
+<?php
+}
+
 function display_profile_doctor($info)
 {
   // display the table of patient
 ?>
   <br />
-  <form name='info_table' action='' method='post'>
+  <form name='info_table' action='update_profile.php' method='post'>
   <table width=600 cellpadding=2 cellspacing=0>
 <?php
-  $color = "#cccccc";
-  echo "<tr bgcolor='$color'><td><strong>Name</strong></td>";
-  echo "<td><strong>email</strong></td>";
-  echo "<td><strong>address</strong></td>";
-  echo "<td><strong>sexual</strong></td>";
-  echo "<td><strong>age</strong></td>";
-  echo "<td><strong>specialty</strong></td></tr>";
   if (is_array($info) && count($info)>0)
   {
     foreach ($info as $md)
@@ -258,18 +283,20 @@ function display_profile_doctor($info)
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[1]."</td>";
-      echo "<td>".$md[3]."</td>";
-      echo "<td>".$md[4]."</td>";
-      echo "<td>".$md[5]."</td>";
-      echo "<td>".$md[6]."</td>";
-      echo "<td>".$md[7]."</td>";
-      echo "</tr>"; 
+      echo "<tr bgcolor='$color'><td><strong>Name</strong></td><td><input type='text' name='name' value=".$md[1]."></td></tr>";
+      echo "<tr><td><strong>email</strong></td><td><input type='text' name='email' value=".$md[3]."></td></tr>";
+      echo "<tr><td><strong>address</strong></td><td><input type='text' name='address' value=".$md[4]."></td></tr>";
+      echo "<tr><td><strong>sexual</strong></td><td><input type='text' name='sexual' value=".$md[5]."></td></tr>";
+      echo "<tr><td><strong>age</strong></td><td><input type='text' name='age' value=".$md[6]."></td></tr>";
+      echo "<tr><td><strong>specialty</strong></td><td><input type='text' name='specialty' value=".$md[7]."></td></tr>";
+      echo "<tr><td><strong>clinic name</strong></td><td><input type='text' name='clinic_name' value=".$md[8]."></td></tr>";
+      echo "<tr><td><strong>clinic location</strong></td><td><input type='text' name='clinic_location' value=".$md[9]."></td></tr>";
     }
+    echo "<tr> <td colspan=2 align='center'> <input type='submit' value='Update Profile'></td></tr>";
   }
   else
     echo "<tr><td>No profile record</td></tr>";
-?>
+?>_i
   </table> 
   </form>
 <?php
