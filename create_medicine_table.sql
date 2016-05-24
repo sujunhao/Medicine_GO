@@ -69,7 +69,6 @@ CREATE TABLE storages
 drug_names varchar(50),
 expired_date TIMESTAMP,
 amount int
-foreign key(drug_names) references medicines(id),
 );
 
 
