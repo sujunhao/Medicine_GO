@@ -15,7 +15,12 @@ function do_html_header($title)
       $(".btn").click(function(){
         $(".new_md:last").after("<tr class='new_md'><td><input name='md_id_"+num+"' placeholder='medicint id'></td> <td><input name='md_am_"+num+"' placeholder='amount'></td></tr>");num=num+1;
       });
-      
+
+
+      $(".btn1").click(function(){
+          $(this).parent().parent().nextUntil(".p_main").toggle();
+      });
+
     });
     </script>
     <style>
@@ -163,7 +168,8 @@ function display_md_info($md_array)
   echo "<td><strong>Dosage</strong></td>";
   echo "<td><strong>Indication</strong></td>";
   echo "<td><strong>Description</strong></td>";
-  echo "<td><strong>Price</strong></td></tr>";
+  echo "<td><strong>Price</strong></td>";
+  echo "<td><strong>Amount</strong></td></tr>";
   if (is_array($md_array) && count($md_array)>0)
   {
     foreach ($md_array as $md)
@@ -180,6 +186,7 @@ function display_md_info($md_array)
       echo "<td>".$md[4]."</td>";
       echo "<td>".$md[5]."</td>";
       echo "<td>".$md[6]."</td>";
+      echo "<td>".$md[7]."</td>";
       echo "</tr>"; 
     }
   }
@@ -215,18 +222,18 @@ function display_profile_my_patient($info)
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr><td>".$md[1]."</td>";
+      echo "<tr><td>".$md[0]."</td>";
+      echo "<td>".$md[1]."</td>";
       echo "<td>".$md[3]."</td>";
       echo "<td>".$md[4]."</td>";
       echo "<td>".$md[5]."</td>";
       echo "<td>".$md[6]."</td>";
-      echo "<td>".$md[7]."</td>";
-      echo "<td>".$md[8]."</td></tr>";
+      echo "<td>".$md[7]."</td></tr>";
     }
   }
   else
     echo "<tr><td>No profile record</td></tr>";
-?>_i
+?>
   </table> 
   </form>
 <?php
@@ -254,13 +261,13 @@ function display_profile_patient($info)
       echo "<tr><td><strong>sexual</strong></td><td><input type='text' name='sexual' value=".$md[5]."></td></tr>";
       echo "<tr><td><strong>age</strong></td><td><input type='text' name='age' value=".$md[6]."></td></tr>";
       echo "<tr><td><strong>case history</strong></td><td><input type='text' name='case_history' value=".$md[7]."></td></tr>";
-      echo "<tr><td><strong>primary doctor</strong></td><td><input type='text' name='primary_doctor' value=".$md[8]."></td></tr>";
+      echo "<tr><td><strong>primary doctor</strong></td><td><input type='text' name='primary_doctor' value=".$md[9]."></td></tr>";
     }
     echo "<tr> <td colspan=2 align='center'> <input type='submit' value='Update Profile'></td></tr>";
   }
   else
     echo "<tr><td>No profile record</td></tr>";
-?>_i
+?>
   </table> 
   </form>
 <?php
@@ -296,14 +303,14 @@ function display_profile_doctor($info)
   }
   else
     echo "<tr><td>No profile record</td></tr>";
-?>_i
+?>
   </table> 
   </form>
 <?php
 
 }
 
-function display_prescription_form($info)
+function display_prescription_form($info, $md_info)
 {
   // display the table of patient
 ?>
@@ -312,26 +319,52 @@ function display_prescription_form($info)
   <table width=600 cellpadding=2 cellspacing=0>
 <?php
   $color = "#cccccc";
-  echo "<tr bgcolor='$color'><td><strong>Prescription name</strong></td>";
+  echo "<tr bgcolor='$color'><td><strong>Prescription Id</strong></td>";
+  echo "<td><strong>Prescription name</strong></td>";
   echo "<td><strong>doctor</strong></td>";
   echo "<td><strong>patient</strong></td>";
   echo "<td><strong>description</strong></td>";
   echo "<td><strong>medicines info</strong></td></tr>";
   if (is_array($info) && count($info)>0)
   {
-    foreach ($info as $md)
+    reset($info);
+    if (is_array($md_info) && count($md_info)>0)
+    reset($md_info);
+    while($md=current($info))
     {
+      each($info);
+      // $md=$md[1];
       if ($color == "#cccccc")
         $color = "#ffffff";
       else
         $color = "#cccccc";
       // remember to call htmlspecialchars() when we are displaying user data
-      echo "<tr color='$color'><td>".$md[0]."</td>";
+      echo "<tr class='p_main' color='$color'><td>".$md[0]."</td>";
       echo "<td>".$md[1]."</td>";
       echo "<td>".$md[2]."</td>";
       echo "<td>".$md[3]."</td>";
-      echo "<td><button type='button' >Check</button></td>";
+      echo "<td>".$md[4]."</td>";
+      echo "<td><button type='button' class='btn1'>Check</button></td>";
       echo "</tr>"; 
+      
+      $t_md_info=current($md_info);
+      if ($t_md_info[0]==$md[0])
+      {
+        $color = "#cccccc";
+        echo "<tr class ='t_p_m' bgcolor='$color'><td><strong>Medicine ID</strong></td>";
+        echo "<td><strong>Medicine Name</strong></td>";
+        echo "<td><strong>Amount</strong></td>";
+        echo "</tr>";
+        while ($t_md_info[0]==$md[0])
+        {
+          echo "<tr class ='t_p_m' color='$color'><td>".$t_md_info[0]."</td>";
+          echo "<td>".$t_md_info[1]."</td>";
+          echo "<td>".$t_md_info[2]."</td>";
+          echo "</tr>"; 
+          each($md_info);
+          $t_md_info=current($md_info);  
+        }
+      }
       // echo "<tr><td><strong>medicines</strong></td>";
       // echo "<td><strong>amount</strong></td></tr>";
     }
@@ -339,6 +372,9 @@ function display_prescription_form($info)
   else
     echo "<tr><td>No profile record</td></tr>";
 ?>
+  <script type="text/javascript">
+  $(".t_p_m").toggle();
+  </script>
   </table> 
   </form>
 <?php

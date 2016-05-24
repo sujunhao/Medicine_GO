@@ -88,18 +88,17 @@ function login($thetype, $username, $password)
   if (!$result)
      throw new Exception('Could not log you in.');
   
-  // if ($result->num_rows>0)
-  //    return $result->fetch_row();
-
-  //create an array of the ids 
-  $id_array = array();
-  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  if ($result->num_rows>0)
   {
-    $id_array[$count] = $row;
-  }  
-  return $id_array;
-
-  throw new Exception('Could not log you in.');
+    $id_array = array();
+    for ($count = 1; $row = $result->fetch_row(); ++$count) 
+    {
+      $id_array[$count] = $row;
+    }  
+    return $id_array;
+    
+  }
+  else throw new Exception('Could not log you in.');
 }
 
 function check_valid_user()

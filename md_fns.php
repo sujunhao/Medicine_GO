@@ -12,7 +12,10 @@ function get_md_info()
                            group by id;
                            " );
   if (!$result)
-    return false; 
+    return false;
+
+  // if ($result->num_rows<=0)
+  //   throw new Exception('no medicine record'); 
 
   //create an array of the mds 
   $md_array = array();
@@ -111,17 +114,20 @@ function get_member_info($thetype, $name)
   {
     case 'the_patient':
         $thetype='patient';
+        $result = $conn->query( "select patient.*, doctor.name
+                          from patient, doctor
+                          where patient.name = '$name' && primary_doctor_id=doctor.id");
     break;
     case 'the_doctor':
         $thetype='doctor';
+        $result = $conn->query( "select *
+                          from $thetype
+                          where name = '$name'");
     break;
     default:
       throw new Exception('Could not check type');
   }
 
-  $result = $conn->query( "select *
-                          from $thetype
-                          where name = '$name'");
   if (!$result)
     return false; 
 
@@ -176,10 +182,18 @@ function add_prescriptiopn($pname, $doctor_id, $patient_id, $description)
   $conn = db_connect();
 
   // check not a repeat medicine
+  $result = $conn->query("select * from patient, doctor
+                         where patient.id=$patient_id && primary_doctor_id=$doctor_id");
+  if (!$result || ($result->num_rows==0))
+    throw new Exception('You arre no the primary doctor of patient');
+
+
+  // check not a repeat medicine
   $result = $conn->query("select * from prescription
                          where pname='$pname'");
   if ($result && ($result->num_rows>0))
     throw new Exception('prescription already exists.');
+
 
   // insert the new record
   if (!$conn->query( "insert into prescription (pname, doctor_id, patient_id, description) values
@@ -219,17 +233,57 @@ function get_my_prescription($thetype, $id)
   switch($thetype)
   {
     case 'the_patient':
-        $result = $conn->query( "select prescription.pname, doctor.name, patient.name, description
+        if (!$result = $conn->query( "select prescription.id, prescription.pname, doctor.name, patient.name, description
                           from prescription, doctor, patient
-                          where patient_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id");
+                          where patient_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id
+                          order by prescription.id"))
+          throw new Exception("can't get patient prescription info");
     break;
     case 'the_doctor':
-      $result = $conn->query( "select prescription.pname, doctor.name, patient.name, description
+        if (!$result = $conn->query( "select prescription.id, prescription.pname, doctor.name, patient.name, description
                           from prescription, doctor, patient
-                          where doctor_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id");
+                          where doctor_id = $id && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id
+                          order by prescription.id"))
+            throw new Exception("can't get patient prescription info");
     break;
     default:
       throw new Exception('type error');
+  }
+  if (!$result)
+    return false; 
+
+  //create an array of the URLs 
+  $member_array = array();
+  for ($count = 1; $row = $result->fetch_row(); ++$count) 
+  {
+    $member_array[$count] = $row;
+  }  
+  return $member_array;
+}
+
+function get_my_prescription_md($thetype, $theid)
+{
+  $conn = db_connect();
+  switch($thetype)
+  {
+    case 'the_patient':
+        if (!$result = $conn->query( "select p_m.p_id, medicines.drug_names, p_m.amount, prescription.id
+                          from prescription, doctor, patient, p_m, medicines
+                          where patient_id = $theid && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id &&
+                          prescription.id=p_m.p_id && medicines.id=p_m.m_id
+                          order by prescription.id"))
+          throw new Exception("can't get patient prescription md info");
+    break;
+    case 'the_doctor':
+      if (!$result = $conn->query( "select p_m.p_id, drug_names, p_m.amount, prescription.id
+                          from prescription, doctor, patient, p_m, medicines
+                          where doctor_id = $theid && doctor.id=prescription.doctor_id && patient.id=prescription.patient_id && 
+                          prescription.id=p_m.p_id && medicines.id=p_m.m_id
+                          order by prescription.id"))
+        throw new Exception("can't get patient prescription md info");
+    break;
+    default:
+      throw new Exception("can't get p_m medicine info");
   }
   if (!$result)
     return false; 

@@ -42,7 +42,6 @@ try
 }	
 catch(Exception $e)
 {
-	echo "Can't get your Profile";
 	echo $e->getMessage(); 
 	display_user_menu();
 	do_html_footer();

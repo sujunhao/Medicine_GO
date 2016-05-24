@@ -18,7 +18,8 @@ try
 		case 'the_patient':
 			if ($info = get_my_prescription($thetype, $theid))
 		    {
-		    	display_prescription_form($info);
+		    	$md_info=get_my_prescription_md($thetype, $theid);
+		    	display_prescription_form($info, $md_info);
 		    }
 		    else
 		    {
@@ -29,7 +30,8 @@ try
 			display_add_prescription_form();
 		    if ($info = get_my_prescription($thetype, $theid))
 		    {
-		    	display_prescription_form($info);
+		    	$md_info=get_my_prescription_md($thetype, $theid);
+		    	display_prescription_form($info, $md_info);
 		    }
 		    else
 		    {
@@ -43,7 +45,7 @@ try
 }	
 catch(Exception $e)
 {
-	echo "Can't get your Profile";
+	echo $e->getMessage(); 
 	display_user_menu();
 	do_html_footer();
 	exit;

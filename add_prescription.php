@@ -35,7 +35,7 @@
 
     while ($m_id && $amount)
     {
-      echo ":----".$pid."asd".$m_id.$amount;
+      // echo ":----".$pid."asd".$m_id.$amount;
       add_p_m($p_id, $m_id, $amount);
 
       ++$num;

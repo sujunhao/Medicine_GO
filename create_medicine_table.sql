@@ -69,6 +69,7 @@ CREATE TABLE storages
 drug_names varchar(50),
 expired_date TIMESTAMP,
 amount int
+foreign key(drug_names) references medicines(id),
 );
 
 
@@ -86,14 +87,13 @@ primary key(id)
 );
 
 create table p_m
-{
+(
 p_id int unsigned not null,
 m_id int unsigned not null,
-amount int unsigned,
+amount int,
 foreign key(p_id) references prescription(id),
 foreign key(m_id) references medicines(id)
-};
-
+);
 
 create table p_m_number
 (
